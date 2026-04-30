@@ -9,12 +9,12 @@
 - ✅ Git repo initialised and pushed to Sydney Uni GitHub
 - ✅ Project scaffold (backend + frontend folder structure)
 - ✅ Backend boilerplate (server.js, db.js, .env.example)
-- ✅ Models: User, Question, Score
-- ✅ Controllers: auth, quiz, admin
-- ✅ Routes: auth, quiz, admin
-- ✅ Middleware: auth (JWT), admin (role check)
-- ✅ Frontend API wrapper (fetch-based)
-- ✅ React Context: AuthContext, QuizContext + useReducer
+- 🔲 Models: User, Question, Score
+- 🔲 Controllers: auth, quiz, admin
+- 🔲 Routes: auth, quiz, admin
+- 🔲 Middleware: auth (JWT), admin (role check)
+- 🔲 Frontend API wrapper (fetch-based)
+- 🔲 React Context: AuthContext, QuizContext + useReducer
 - 🔲 `npm install` backend dependencies
 - 🔲 Init Vite React frontend (`npm create vite`)
 - 🔲 Install frontend dependencies (MUI, RHF, Zod)
