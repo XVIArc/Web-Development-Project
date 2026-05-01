@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import History from "./pages/History";
+import Leaderboard from "./pages/Leaderboard.jsx";
 
 function App() {
   const [mode, setMode] = useState(
@@ -35,7 +36,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/history" element={<History />} />
-
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route
               element={
                 <QuizProvider>
