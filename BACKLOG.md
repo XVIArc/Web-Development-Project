@@ -31,7 +31,7 @@
 - 🔲 Auth-protected routes (React Router `<ProtectedRoute>`)
 - ✅ Logout clears token + redirects
 - ✅ Admin login (same endpoint, role check on frontend)
-- 🔲 Rate limiting on login endpoint ✅ (already in backend)
+- 🔲 Rate limiting on login endpoint
 
 ---
 
@@ -44,7 +44,7 @@
 - ✅ Questions shuffled per attempt ✅ (already in backend)
 - ✅ Final score screen
 - ✅ Submit quiz to backend (save attempt)
-- 🔲 Rate limiting on submit endpoint ✅ (already in backend)
+- 🔲 Rate limiting on submit endpoint
 - ✅ View past attempts page
 - ✅ Leaderboard page (sorted by score)
 
@@ -89,10 +89,10 @@
 
 ## 🔒 Security & Validation
 
-- 🔲 Password hashing (bcrypt) ✅ (in User model)
+- 🔲 Password hashing (bcrypt)
 - 🔲 Input sanitisation on backend (prevent XSS/injection)
-- 🔲 Consistent API response envelope `{ success, data, error }` ✅
-- 🔲 Admin middleware enforced on all admin routes ✅
+- 🔲 Consistent API response envelope `{ success, data, error }`
+- 🔲 Admin middleware enforced on all admin routes
 - 🔄 Frontend hides admin UI for non-admins (Navbar done, ProtectedRoute pending)
 - ✅ Zod validation on all frontend forms
 
