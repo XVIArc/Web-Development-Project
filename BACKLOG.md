@@ -13,11 +13,11 @@
 - 🔲 Controllers: auth, quiz, admin
 - 🔲 Routes: auth, quiz, admin
 - 🔲 Middleware: auth (JWT), admin (role check)
-- 🔲 Frontend API wrapper (fetch-based)
-- 🔲 React Context: AuthContext, QuizContext + useReducer
+- ✅ Frontend API wrapper (fetch-based, with mocks)
+- ✅ React Context: AuthContext, QuizContext + useReducer
 - 🔲 `npm install` backend dependencies
-- 🔲 Init Vite React frontend (`npm create vite`)
-- 🔲 Install frontend dependencies (MUI, RHF, Zod)
+- ✅ Init Vite React frontend (`npm create vite`)
+- ✅ Install frontend dependencies (MUI, RHF, Zod)
 - 🔲 Configure Vite proxy to backend (avoid CORS in dev)
 - 🔲 Create `.env` files from `.env.example`
 
@@ -25,28 +25,28 @@
 
 ## 🔐 Authentication
 
-- 🔲 Register page (RHF + Zod validation)
-- 🔲 Login page (RHF + Zod validation)
-- 🔲 JWT stored in localStorage on login
+- ✅ Register page (RHF + Zod validation)
+- ✅ Login page (RHF + Zod validation)
+- ✅ JWT stored in localStorage on login
 - 🔲 Auth-protected routes (React Router `<ProtectedRoute>`)
-- 🔲 Logout clears token + redirects
-- 🔲 Admin login (same endpoint, role check on frontend)
+- ✅ Logout clears token + redirects
+- ✅ Admin login (same endpoint, role check on frontend)
 - 🔲 Rate limiting on login endpoint ✅ (already in backend)
 
 ---
 
 ## 🎮 Quiz — Player Interface
 
-- 🔲 Start quiz button → fetch questions from backend
-- 🔲 Question display (text + 4 options)
-- 🔲 Answer selection (locked after submit, no going back)
-- 🔲 Next question flow
-- 🔲 Questions shuffled per attempt ✅ (already in backend)
-- 🔲 Final score screen
-- 🔲 Submit quiz to backend (save attempt)
+- ✅ Start quiz button → fetch questions from backend
+- ✅ Question display (text + 4 options)
+- ✅ Answer selection (locked after submit, no going back)
+- ✅ Next question flow
+- ✅ Questions shuffled per attempt ✅ (already in backend)
+- ✅ Final score screen
+- ✅ Submit quiz to backend (save attempt)
 - 🔲 Rate limiting on submit endpoint ✅ (already in backend)
-- 🔲 View past attempts page
-- 🔲 Leaderboard page (sorted by score)
+- ✅ View past attempts page
+- ✅ Leaderboard page (sorted by score)
 
 ---
 
@@ -77,13 +77,13 @@
 
 ## 🎨 UI / UX
 
-- 🔲 MUI theme setup (light + dark)
-- 🔲 Dark mode toggle (persisted in localStorage)
-- 🔲 Dark mode applies to both player and admin interfaces
-- 🔲 Responsive layout (mobile-friendly)
-- 🔲 Loading states / spinners
+- ✅ MUI theme setup (light + dark)
+- ✅ Dark mode toggle (persisted in localStorage)
+- 🔄 Dark mode applies to both player and admin interfaces
+- 🔄 Responsive layout (mobile-friendly, Grid in progress)
+- ✅ Loading states / spinners (CircularProgress)
 - 🔲 Error messages / toast notifications
-- 🔲 Navigation bar (login/logout, links)
+- ✅ Navigation bar (login/logout, links)
 
 ---
 
@@ -93,8 +93,8 @@
 - 🔲 Input sanitisation on backend (prevent XSS/injection)
 - 🔲 Consistent API response envelope `{ success, data, error }` ✅
 - 🔲 Admin middleware enforced on all admin routes ✅
-- 🔲 Frontend hides admin UI for non-admins
-- 🔲 Zod validation on all frontend forms
+- 🔄 Frontend hides admin UI for non-admins (Navbar done, ProtectedRoute pending)
+- ✅ Zod validation on all frontend forms
 
 ---
 
