@@ -37,7 +37,7 @@ export default function Navbar({ mode, toggleTheme }) {
 
         {user ? (
           <Box sx={{ display: "flex", gap: 1 }}>
-            <Button color="inherit" onClick={() => navigate("/attempts")}>
+            <Button color="inherit" onClick={() => navigate("/history")}>
               History
             </Button>
             <Button color="inherit" onClick={() => navigate("/leaderboard")}>

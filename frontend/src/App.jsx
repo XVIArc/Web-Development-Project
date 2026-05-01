@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
+import History from "./pages/History";
 
 function App() {
   const [mode, setMode] = useState(
@@ -33,6 +34,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/history" element={<History />} />
 
             <Route
               element={
