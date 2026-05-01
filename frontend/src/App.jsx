@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Quiz from "./pages/Quiz";
+import Result from "./pages/Result";
 
 function App() {
   const [mode, setMode] = useState(
@@ -41,6 +42,7 @@ function App() {
               }
             >
               <Route path="/quiz" element={<Quiz />} />
+              <Route path="/result" element={<Result />} />
             </Route>
           </Routes>
         </BrowserRouter>
