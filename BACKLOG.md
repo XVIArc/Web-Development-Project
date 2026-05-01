@@ -31,20 +31,21 @@
 - 🔲 Auth-protected routes (React Router `<ProtectedRoute>`)
 - ✅ Logout clears token + redirects
 - ✅ Admin login (same endpoint, role check on frontend)
-- 🔲 Rate limiting on login endpoint
+
 
 ---
 
 ## 🎮 Quiz — Player Interface
 
-- ✅ Start quiz button → fetch questions from backend
+- ✅ Start quiz button → fetch questions (mock, swap when backend ready)
 - ✅ Question display (text + 4 options)
 - ✅ Answer selection (locked after submit, no going back)
 - ✅ Next question flow
-- ✅ Questions shuffled per attempt ✅ (already in backend)
+- 🔲 Questions shuffled per attempt (needs backend implementation in quiz controller)
 - ✅ Final score screen
-- ✅ Submit quiz to backend (save attempt)
-- 🔲 Rate limiting on submit endpoint
+- ✅ Submit quiz (mock, swap when backend ready)
+- 🔲 Rate limiting on submit endpoint (needs express-rate-limit in backend)
+- 🔲 Rate limiting on login endpoint (needs express-rate-limit in backend)
 - ✅ View past attempts page
 - ✅ Leaderboard page (sorted by score)
 
