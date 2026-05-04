@@ -64,7 +64,7 @@
 - ✅ Password hashing (bcrypt, pre-save hook)
 - ✅ Rate limiting (login: 10/15min, submit: 5/1min)
 - ✅ Consistent API envelope `{ success, data, error }`
-- 🔲 Admin middleware enforced (stubbed)
+- ✅ Admin middleware enforced
 - ✅ Configure Vite proxy to backend
 
 ---
@@ -81,4 +81,5 @@
 
 - 🔲 README: setup, architecture diagram, API docs
 - 🔲 Individual reflection PDF
+- ✅ Test suite (Jest + Supertest + mongodb-memory-server)
 - 🔲 Final zip (no node_modules)
