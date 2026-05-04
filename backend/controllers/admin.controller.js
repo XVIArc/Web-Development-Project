@@ -50,7 +50,7 @@ const updateQuestion = async (req, res) => {
     const question = await Question.findByIdAndUpdate(
       req.params.id,
       { text, options, correctIndex },
-      { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     );
 
     if (!question) {
