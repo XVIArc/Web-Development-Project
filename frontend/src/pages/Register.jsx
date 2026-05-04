@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField, Button, Box, Typography, Alert, Grid } from "@mui/material";
+import { TextField, Button, Box, Typography, Alert, Grid,Paper } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
@@ -37,59 +37,95 @@ export default function Register() {
     navigate("/");
   };
 
-  return (
+return (
     <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      sx={{ minHeight: "80vh" }}
+        container
+        sx={{
+            minHeight: "80vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            px: 2,
+        }}
     >
-      <Grid item xs={12} sm={8} md={4}>
-        <Box sx={{ px: 4, py: 6 }}>
-          <Typography variant="h5" mb={3}>
-            Register
-          </Typography>
+        <Grid item xs={12} sm={8} md={4}>
+            <Paper
+                elevation={4}
+                sx={{
+                    width: "100%",
+                    maxWidth: 380,
+                    borderRadius: 4,
+                    px: { xs: 3, sm: 5 },
+                    py: { xs: 4, sm: 5 },
+                    mx: "auto",
+                    textAlign: "center",
+                }}
+            >
+                <Typography variant="h5" mb={3}>
+                    Register
+                </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 2, textAlign: "left" }}>
+                        {error}
+                    </Alert>
+                )}
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <TextField
-              label="Username"
-              {...register("username")}
-              error={!!errors.username}
-              helperText={errors.username?.message}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              {...register("password")}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-            <TextField
-              label="Confirm Password"
-              type="password"
-              {...register("confirmPassword")}
-              error={!!errors.confirmPassword}
-              helperText={errors.confirmPassword?.message}
-            />
-            <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? "Registering..." : "Register"}
-            </Button>
-            <Typography variant="body2">
-              Already have an account? <Link to="/login">Login</Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Grid>
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit(onSubmit)}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                    }}
+                >
+                    <TextField
+                        label="Username"
+                        {...register("username")}
+                        error={!!errors.username}
+                        helperText={errors.username?.message}
+                        fullWidth
+                    />
+
+                    <TextField
+                        label="Password"
+                        type="password"
+                        {...register("password")}
+                        error={!!errors.password}
+                        helperText={errors.password?.message}
+                        fullWidth
+                    />
+
+                    <TextField
+                        label="Confirm Password"
+                        type="password"
+                        {...register("confirmPassword")}
+                        error={!!errors.confirmPassword}
+                        helperText={errors.confirmPassword?.message}
+                        fullWidth
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={isSubmitting}
+                        sx={{
+                            borderRadius: 999,
+                            py: 1.1,
+                            textTransform: "none",
+                            fontWeight: 600,
+                        }}
+                    >
+                        {isSubmitting ? "Registering..." : "Register"}
+                    </Button>
+
+                    <Typography variant="body2">
+                        Already have an account? <Link to="/login">Login</Link>
+                    </Typography>
+                </Box>
+            </Paper>
+        </Grid>
     </Grid>
-  );
+);
 }
