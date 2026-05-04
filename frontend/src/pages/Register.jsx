@@ -5,6 +5,7 @@ import { TextField, Button, Box, Typography, Alert, Grid } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { authApi } from "../api/auth";
 
 const schema = z
   .object({
@@ -32,9 +33,13 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     setError("");
-    // MOCK — remove when backend ready
-    login("mock-token", "player");
-    navigate("/");
+    try {
+      const result = await authApi.register(data);
+      login(result.token, result.role);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
