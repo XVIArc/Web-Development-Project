@@ -14,6 +14,7 @@ const scoreSchema = new mongoose.Schema(
       {
         questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question" },
         selectedIndex: Number,
+        isCorrect: Boolean,
       },
     ],
   },

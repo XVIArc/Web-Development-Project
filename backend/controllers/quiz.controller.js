@@ -58,8 +58,9 @@ const submitQuiz = async (req, res) => {
     let score = 0;
     const scoredAnswers = answers.map((a) => {
       const q = qMap[a.questionId];
-      if (q && a.selectedIndex === q.correctIndex) score++;
-      return { questionId: a.questionId, selectedIndex: a.selectedIndex };
+      const isCorrect = !!(q && a.selectedIndex === q.correctIndex);
+      if (isCorrect) score++;
+      return { questionId: a.questionId, selectedIndex: a.selectedIndex, isCorrect };
     });
 
     // store username directly so leaderboard reads don't need a populate()
