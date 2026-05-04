@@ -1,9 +1,8 @@
-// TODO: check that the logged-in user is actually an admin
-//
-// auth middleware runs first and sets req.user, so just check:
-//   req.user.role !== "admin" → 403
-//   otherwise call next()
-
-const admin = (req, res, next) => {};
+const admin = (req, res, next) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ success: false, error: "Admin access required" });
+  }
+  next();
+};
 
 module.exports = admin;
