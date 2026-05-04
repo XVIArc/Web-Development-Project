@@ -5,6 +5,7 @@ import { TextField, Button, Box, Typography, Alert, Grid,Paper,Stack } from "@mu
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { authApi } from "../api/auth";
 
 const schema = z.object({
   username: z.string().min(1, "Username required"),
@@ -26,15 +27,12 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     setError("");
-    // MOCK — remove when backend is ready
-    if (data.username === "admin" && data.password === "admin") {
-      login("mock-token", "admin");
+    try {
+      const result = await authApi.login(data);
+      login(result.token, result.role);
       navigate("/");
-    } else if (data.username === "user" && data.password === "user") {
-      login("mock-token", "player");
-      navigate("/");
-    } else {
-      setError("Invalid credentials");
+    } catch (err) {
+      setError(err.message);
     }
   };
 

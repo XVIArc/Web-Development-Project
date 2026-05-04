@@ -1,12 +1,17 @@
 import { useState, useMemo } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { AuthProvider } from "./context/AuthProvider";
+import { QuizProvider } from "./context/QuizProvider";
 import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
 import Admin from './pages/Admin';
-import { AuthProvider } from "./context/AuthProvider";
+import Quiz from "./pages/Quiz";
+import Result from "./pages/Result";
+import History from "./pages/History";
+import Leaderboard from "./pages/Leaderboard.jsx";
 
 function App() {
   const [mode, setMode] = useState(
@@ -25,7 +30,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        {" "}
         <BrowserRouter>
           <Navbar mode={mode} toggleTheme={toggleTheme} />
           <Routes>
@@ -33,6 +37,19 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<Admin />} />
+
+            <Route path="/history" element={<History />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route
+              element={
+                <QuizProvider>
+                  <Outlet />
+                </QuizProvider>
+              }
+            >
+              <Route path="/quiz" element={<Quiz />} />
+              <Route path="/result" element={<Result />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </AuthProvider>
