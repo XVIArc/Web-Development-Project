@@ -13,6 +13,8 @@
 - ✅ Middleware: auth (JWT verify + attach req.user)
 - ✅ Middleware: admin (role check)
 - ✅ Add `isCorrect` to Score answers sub-doc
+- ✅ Test suite (Jest + Supertest) — 41/41 passing
+- ✅ Extracted app.js for testability
 
 ---
 
@@ -22,7 +24,7 @@
 - ✅ Login page (RHF + Zod)
 - ✅ Logout clears token
 - ✅ Wire Login/Register pages to real API
-- 🔲 ProtectedRoute component
+- 🔲 ProtectedRoute component (redirect to /login if no token)
 
 ---
 
@@ -40,8 +42,8 @@
 
 - 🔲 Admin dashboard (question list, active/inactive)
 - 🔲 Create question form (RHF + Zod)
-- 🔲 Edit question form
-- 🔲 Delete question (with confirmation)
+- 🔲 Edit question form (pre-filled)
+- 🔲 Delete question (with confirmation dialog)
 - 🔲 Toggle active/inactive
 - 🔲 Bulk import (JSON textarea)
 - 🔲 Register admin routes in App.jsx
@@ -64,14 +66,15 @@
 - ✅ Password hashing (bcrypt, pre-save hook)
 - ✅ Rate limiting (login: 10/15min, submit: 5/1min)
 - ✅ Consistent API envelope `{ success, data, error }`
-- ✅ Admin middleware enforced
-- ✅ Configure Vite proxy to backend
+- ✅ Admin middleware enforced on all admin routes
+- ✅ Vite proxy configured (dev)
 
 ---
 
 ## 🎯 Variation
 
-- 🔲 Choose + get tutor sign-off
+- 🔲 Choose one + get tutor sign-off by end of Week 9
+- 🔲 Update model if needed
 - 🔲 Implement in backend
 - 🔲 Implement in frontend
 
@@ -79,7 +82,7 @@
 
 ## 📄 Docs & Submission
 
-- 🔲 README: setup, architecture diagram, API docs
+- ✅ Docs: AUTH.md, QUIZ.md, ADMIN.md, MIDDLEWARE.md, MODELS.md
+- 🔲 README: setup instructions, architecture diagram, API docs link
 - 🔲 Individual reflection PDF
-- ✅ Test suite (Jest + Supertest + mongodb-memory-server)
 - 🔲 Final zip (no node_modules)
