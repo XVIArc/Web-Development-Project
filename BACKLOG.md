@@ -21,7 +21,7 @@
 - ✅ Register page (RHF + Zod)
 - ✅ Login page (RHF + Zod)
 - ✅ Logout clears token
-- 🔲 Wire Login/Register pages to real API (currently inline mocks)
+- ✅ Wire Login/Register pages to real API
 - 🔲 ProtectedRoute component
 
 ---
@@ -32,7 +32,7 @@
 - ✅ Final score screen
 - ✅ Past attempts page
 - ✅ Leaderboard page
-- 🔲 Wire quiz pages to real API (currently mocks)
+- ✅ Wire quiz pages to real API
 
 ---
 
@@ -65,7 +65,7 @@
 - ✅ Rate limiting (login: 10/15min, submit: 5/1min)
 - ✅ Consistent API envelope `{ success, data, error }`
 - 🔲 Admin middleware enforced (stubbed)
-- 🔲 Configure Vite proxy to backend
+- ✅ Configure Vite proxy to backend
 
 ---
 
