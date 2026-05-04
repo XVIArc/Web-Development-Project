@@ -1,6 +1,6 @@
 # Data Models
 
-Three Mongoose models required. All use `{ timestamps: true }`.
+Three Mongoose models. All use `{ timestamps: true }` so `createdAt` and `updatedAt` are added automatically.
 
 ---
 
@@ -10,15 +10,15 @@ File: `backend/models/User.js`
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `username` | String | ✅ | unique, trim |
-| `email` | String | ✅ | unique, lowercase |
-| `password` | String | ✅ | hashed with bcrypt before save |
-| `role` | String | — | `'user'` \| `'admin'`, default `'user'` |
+| `username` | String | yes | unique, trimmed |
+| `password` | String | yes | stored as bcrypt hash |
+| `role` | String | no | `"player"` or `"admin"`, defaults to `"player"` |
 
-**Notes:**
-- Hash password in a `pre('save')` hook, not in the controller
-- Add a `comparePassword(candidate)` instance method for login checks
-- Never return `password` in API responses
+**Notes**
+- Password is hashed in a `pre("save")` hook (10 rounds), never in the controller
+- `comparePassword(candidate)` instance method wraps `bcrypt.compare`, used in login
+- Password is never returned in any API response
+- To make someone an admin, set `role: "admin"` directly in the DB
 
 ---
 
@@ -28,16 +28,20 @@ File: `backend/models/Question.js`
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `text` | String | ✅ | The question text |
-| `options` | [String] | ✅ | Exactly 4 items — validate `v.length === 4` |
-| `correctAnswer` | Number | ✅ | Index into `options` (0–3) |
-| `active` | Boolean | — | Default `true`; admin can toggle |
+| `text` | String | yes | The question prompt |
+| `options` | [String] | yes | Exactly 4 items, validated at model level |
+| `correctIndex` | Number | yes | Index into options (0-3) |
+| `active` | Boolean | no | Defaults to true, inactive questions are excluded from player quizzes |
 
-**Variation fields (add when variation is decided):**
-- Timed: `timeLimit: Number` (seconds)
+**Variation fields (add when variation is decided)**
+- Timed: `timeLimit: Number` (seconds per question)
 - Categorised: `category: String`
 - Image-based: `imageUrl: String`
 - Review mode: `explanation: String`
+
+**Notes**
+- `correctIndex` is never sent to the player client (stripped in quiz controller)
+- Admin endpoints return `correctIndex` since admins need it for editing
 
 ---
 
@@ -47,22 +51,25 @@ File: `backend/models/Score.js`
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `userId` | ObjectId | ✅ | ref: `'User'` |
-| `score` | Number | ✅ | Total correct answers |
-| `answers` | [AnswerSchema] | ✅ | Full answer list — required by spec |
+| `userId` | ObjectId | yes | ref: User |
+| `username` | String | yes | Denormalised from JWT at submit time |
+| `score` | Number | yes | Total correct answers |
+| `total` | Number | yes | Total questions in that attempt |
+| `answers` | [AnswerSchema] | yes | Full answer list |
 
-**AnswerSchema (sub-document, no `_id`):**
+**AnswerSchema (sub-document)**
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| `questionId` | ObjectId | ✅ | ref: `'Question'` |
-| `selectedAnswer` | Number | ✅ | Index 0–3 of chosen option |
-| `isCorrect` | Boolean | ✅ | Computed on submit, stored here |
+| Field | Type | Notes |
+|-------|------|-------|
+| `questionId` | ObjectId | ref: Question |
+| `selectedIndex` | Number | Index 0-3 of the chosen option |
+| `isCorrect` | Boolean | Computed at submit time, stored for review |
 
-**Notes:**
-- `createdAt` (from timestamps) acts as the attempt timestamp
-- Leaderboard: sort by `score` descending — show all attempts or best per user (document your choice in README)
-- Use `.populate('userId', 'username')` when fetching leaderboard
+**Notes**
+- `createdAt` from timestamps serves as the attempt timestamp
+- `username` is stored directly so leaderboard reads don't need a `populate()`
+- Each quiz attempt creates a new Score document, so one user can have many scores
+- Leaderboard shows all attempts (not best-per-user), sorted by score descending
 
 ---
 
@@ -72,6 +79,3 @@ File: `backend/models/Score.js`
 User ──< Score >── Question
          (via answers[].questionId)
 ```
-
-One user can have many Score documents (one per attempt).
-Each Score embeds the full answer list referencing Questions.

@@ -4,130 +4,81 @@
 
 ---
 
-## 🏗️ Setup & Infrastructure
+## 🏗️ Backend
 
-- ✅ Git repo initialised and pushed to Sydney Uni GitHub
-- ✅ Project scaffold (backend + frontend folder structure)
-- ✅ Backend boilerplate (server.js, db.js, .env.example)
-- 🔲 Models: User, Question, Score
-- 🔲 Controllers: auth, quiz, admin
-- 🔲 Routes: auth, quiz, admin
-- 🔲 Middleware: auth (JWT), admin (role check)
-- ✅ Frontend API wrapper (fetch-based, with mocks)
-- ✅ React Context: AuthContext, QuizContext + useReducer
-- 🔲 `npm install` backend dependencies
-- ✅ Init Vite React frontend (`npm create vite`)
-- ✅ Install frontend dependencies (MUI, RHF, Zod)
-- 🔲 Configure Vite proxy to backend (avoid CORS in dev)
-- 🔲 Create `.env` files from `.env.example`
+- ✅ server.js, db.js, .env.example
+- ✅ Models: User, Question, Score
+- ✅ Routes: auth, quiz, admin (with rate limiting)
+- ✅ Controllers: auth, quiz, admin
+- ✅ Middleware: auth (JWT verify + attach req.user)
+- ✅ Middleware: admin (role check)
+- ✅ Add `isCorrect` to Score answers sub-doc
 
 ---
 
-## 🔐 Authentication
+## 🔐 Auth
 
-- ✅ Register page (RHF + Zod validation)
-- ✅ Login page (RHF + Zod validation)
-- ✅ JWT stored in localStorage on login
-- 🔲 Auth-protected routes (React Router `<ProtectedRoute>`)
-- ✅ Logout clears token + redirects
-- ✅ Admin login (same endpoint, role check on frontend)
-
+- ✅ Register page (RHF + Zod)
+- ✅ Login page (RHF + Zod)
+- ✅ Logout clears token
+- 🔲 Wire Login/Register pages to real API (currently inline mocks)
+- 🔲 ProtectedRoute component
 
 ---
 
-## 🎮 Quiz — Player Interface
+## 🎮 Quiz
 
-- ✅ Start quiz button → fetch questions (mock, swap when backend ready)
-- ✅ Question display (text + 4 options)
-- ✅ Answer selection (locked after submit, no going back)
-- ✅ Next question flow
-- 🔲 Questions shuffled per attempt (needs backend implementation in quiz controller)
+- ✅ Questions display one at a time, answer locks after selection
 - ✅ Final score screen
-- ✅ Submit quiz (mock, swap when backend ready)
-- 🔲 Rate limiting on submit endpoint (needs express-rate-limit in backend)
-- 🔲 Rate limiting on login endpoint (needs express-rate-limit in backend)
-- ✅ View past attempts page
-- ✅ Leaderboard page (sorted by score)
+- ✅ Past attempts page
+- ✅ Leaderboard page
+- 🔲 Wire quiz pages to real API (currently mocks)
 
 ---
 
-## 🛠️ Admin Interface
+## 🛠️ Admin
 
-- 🔲 Admin-only route guard
-- 🔲 Question list (all questions, active/inactive)
-- 🔲 Create question form (RHF + Zod, 4 options, correct answer picker)
+- 🔲 Admin dashboard (question list, active/inactive)
+- 🔲 Create question form (RHF + Zod)
 - 🔲 Edit question form
 - 🔲 Delete question (with confirmation)
-- 🔲 Toggle active/inactive status
-- 🔲 Bulk import via JSON textarea (with validation feedback)
-
----
-
-## 🎯 Game Mechanic Variation
-
-> ⚠️ Must be decided and tutor-approved by end of Week 9
-
-- 🔲 Choose one variation (timed / categorised / image-based / review mode)
-- 🔲 Get tutor acknowledgement
-- 🔲 Update Question model if needed (category field / image URL / explanation)
-- 🔲 Implement variation in backend
-- 🔲 Implement variation in frontend
-- 🔲 Document variation in README
+- 🔲 Toggle active/inactive
+- 🔲 Bulk import (JSON textarea)
+- 🔲 Register admin routes in App.jsx
+- 🔲 Admin-only route guard
 
 ---
 
 ## 🎨 UI / UX
 
-- ✅ MUI theme setup (light + dark)
-- ✅ Dark mode toggle (persisted in localStorage)
-- 🔄 Dark mode applies to both player and admin interfaces
-- 🔄 Responsive layout (mobile-friendly, Grid in progress)
-- ✅ Loading states / spinners (CircularProgress)
+- ✅ MUI theme, dark mode (persisted in localStorage)
+- ✅ Navbar with role-based links
+- ✅ Loading spinners
 - 🔲 Error messages / toast notifications
-- ✅ Navigation bar (login/logout, links)
+- 🔄 Responsive layout
 
 ---
 
-## 🔒 Security & Validation
+## 🔒 Security
 
-- 🔲 Password hashing (bcrypt)
-- 🔲 Input sanitisation on backend (prevent XSS/injection)
-- 🔲 Consistent API response envelope `{ success, data, error }`
-- 🔲 Admin middleware enforced on all admin routes
-- 🔄 Frontend hides admin UI for non-admins (Navbar done, ProtectedRoute pending)
-- ✅ Zod validation on all frontend forms
-
----
-
-## 📄 Documentation
-
-- 🔲 README: setup instructions
-- 🔲 README: architecture diagram (Mermaid)
-- 🔲 README: variation description + justification
-- 🔲 README: team role breakdown + key commit links
-- 🔲 API documentation (Swagger or Postman export)
-- 🔲 Individual Contribution Reflections (one PDF per student)
-  - Subsystem owned
-  - Major technical challenge + solution
-  - Mermaid/UML diagram for subsystem
-  - Git commit analysis (12–15+ meaningful commits)
-  - Reflection on variation design decisions
+- ✅ Password hashing (bcrypt, pre-save hook)
+- ✅ Rate limiting (login: 10/15min, submit: 5/1min)
+- ✅ Consistent API envelope `{ success, data, error }`
+- 🔲 Admin middleware enforced (stubbed)
+- 🔲 Configure Vite proxy to backend
 
 ---
 
-## 🧪 Testing & Polish
+## 🎯 Variation
 
-- 🔲 Manual end-to-end test (register → quiz → leaderboard)
-- 🔲 Manual admin test (login → CRUD questions → bulk import)
-- 🔲 Edge cases: empty question bank, duplicate usernames, wrong password
-- 🔲 Final zip export (no node_modules)
-- 🔲 Group coversheet (signed by all members)
-- 🔲 Week 12 demo prep (each member owns one section)
+- 🔲 Choose + get tutor sign-off
+- 🔲 Implement in backend
+- 🔲 Implement in frontend
 
 ---
 
-## 🎁 Bonus (optional, up to +5 marks)
+## 📄 Docs & Submission
 
-- 🔲 Exceptional UI/UX polish
-- 🔲 Extra thoughtful features extending the variation
-- 🔲 Strong error handling + user feedback throughout
+- 🔲 README: setup, architecture diagram, API docs
+- 🔲 Individual reflection PDF
+- 🔲 Final zip (no node_modules)
