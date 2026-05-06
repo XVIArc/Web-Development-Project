@@ -35,6 +35,7 @@
 - ✅ Past attempts page
 - ✅ Leaderboard page
 - ✅ Wire quiz pages to real API
+- 🔲 **[BUG]** Leaderboard returns top 3 attempts instead of top 3 unique users — same user can appear multiple times <!-- AI -->
 
 ---
 
