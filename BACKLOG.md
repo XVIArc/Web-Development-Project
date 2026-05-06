@@ -35,7 +35,8 @@
 - ✅ Past attempts page
 - ✅ Leaderboard page
 - ✅ Wire quiz pages to real API
-- 🔲 **[BUG]** Leaderboard returns top 3 attempts instead of top 3 unique users — same user can appear multiple times <!-- AI -->
+- 🔲 **[BUG]** Leaderboard returns top 3 attempts instead of top 3 unique users
+- 🔲 **[BUG]** "My History" button on Result page navigates to `/attempts` instead of `/history` <!-- AI --> — same user can appear multiple times <!-- AI -->
 
 ---
 
