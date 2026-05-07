@@ -1,24 +1,28 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField, Button, Box, Typography, Alert, Grid, Paper } from "@mui/material";
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
-
+import { Navigate } from "react-router-dom";
+import { Grid, Typography, Button, Paper, Stack,Box } from "@mui/material";
 export default function Admin() {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token) {
+        return <Navigate to="/admin/login" replace />;
+    }
+
+    if (role !== "admin") {
+        return <Navigate to="/" replace />;
+    }
+
     return (
         <Box
             sx={{
                 minHeight: '80vh',
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
             <Typography variant="h4">
-               Hello Admin
+                Hello Admin
             </Typography>
         </Box>
-
     );
 }

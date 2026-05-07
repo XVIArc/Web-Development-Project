@@ -40,29 +40,51 @@ const register = async (req, res) => {
 
 // POST /api/auth/login
 const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
+    try {
+        const username = req.body.username?.trim();
+        const password = req.body.password;
 
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Username and password are required" });
+        if (!username || !password) {
+            return res
+                .status(400)
+                .json({ success: false, error: "Username and password are required" });
+        }
+
+        const user = await User.findOne({ username });
+
+        console.log("User found:", !!user);
+        console.log("User role:", user?.role);
+        console.log("Stored password starts with:", user?.password?.slice(0, 7));
+
+        if (!user) {
+            return res
+                .status(401)
+                .json({ success: false, error: "Invalid credentials" });
+        }
+
+        const isMatch = await user.comparePassword(password);
+
+        console.log("Password match:", isMatch);
+
+        if (!isMatch) {
+            return res
+                .status(401)
+                .json({ success: false, error: "Invalid credentials" });
+        }
+
+        const token = signToken(user);
+
+        return res.json({
+            success: true,
+            data: {
+                token,
+                role: user.role,
+            },
+        });
+    } catch (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ success: false, error: err.message });
     }
-
-    const user = await User.findOne({ username });
-
-    // keep the error vague on purpose, no need to hint which field was wrong
-    if (!user || !(await user.comparePassword(password))) {
-      return res
-        .status(401)
-        .json({ success: false, error: "Invalid credentials" });
-    }
-
-    const token = signToken(user);
-    res.json({ success: true, data: { token, role: user.role } });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
 };
 
 module.exports = { register, login };

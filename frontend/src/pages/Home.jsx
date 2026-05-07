@@ -1,24 +1,44 @@
 import { Grid, Typography, Button,Paper,Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { useTheme } from "@mui/material/styles";
 
 export default function Home() {
+  const theme = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <Grid
-      container
-    sx={{
-        minHeight: "80vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        px: 2,
-    }}
-    >
-    <Grid item xs={12} sm={8} md={6} sx={{ textAlign: "center" }}>
-        <Paper elevation={4} sx={{width:'100%',maxWidth:300, borderRadius: 4, px: { xs: 3, sm: 5 }, textAlign: 'center' }}>
+      <Grid
+          container
+          sx={{
+              minHeight: "calc(100vh - 64px)",
+          }}
+      >
+          <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{
+                  width: '50%',
+                  minHeight: "calc(100vh - 64px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  px: { xs: 3, md: 6 },
+                  py: 6,
+                  backgroundColor:
+                      theme.palette.mode === "dark"
+                          ? "rgba(15, 23, 42, 0.6)"
+                          : "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: "blur(12px)",
+                  boxShadow:
+                      theme.palette.mode === "dark"
+                          ? "12px 0 40px rgba(0, 0, 0, 0.35)"
+                          : "12px 0 40px rgba(0, 0, 0, 0.12)",
+              }}
+          >
+        <Paper elevation={4} sx={{width:'100%',maxWidth:300, borderRadius: 2, px: { xs: 3, sm: 5 }, textAlign: 'center' }}>
             <Stack spacing={3}>
                 <Typography variant="h3" mb={2}>
                   Quiz App
@@ -46,7 +66,8 @@ export default function Home() {
                               )}
             </Stack>
         </Paper>
-      </Grid>
+          </Grid>
+          <Grid item xs={false} md={6} />
     </Grid>
   );
 }

@@ -12,10 +12,10 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
-  this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
 });
 
-userSchema.methods.comparePassword = function (candidate) {
+userSchema.methods.comparePassword =async function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
