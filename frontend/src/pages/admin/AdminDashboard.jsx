@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Alert,
   Box,
   Button,
   Chip,
@@ -31,42 +30,42 @@ import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
 import { adminApi } from "../../api/admin";
+import { useToast } from "../../context/useToast";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [deleteId, setDeleteId] = useState(null); // id of question pending confirmation
+  const toast = useToast();
 
   const load = () => {
     setLoading(true);
     adminApi
       .getQuestions()
       .then(setQuestions)
-      .catch((err) => setError(err.message))
+      .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
   };
 
   useEffect(load, []);
 
   const handleToggle = async (id) => {
-    setError("");
     try {
       const updated = await adminApi.toggleQuestion(id);
       setQuestions((prev) => prev.map((q) => (q._id === id ? updated : q)));
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     }
   };
 
   const handleDelete = async () => {
-    setError("");
     try {
       await adminApi.deleteQuestion(deleteId);
       setQuestions((prev) => prev.filter((q) => q._id !== deleteId));
+      toast.success("Question deleted.");
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setDeleteId(null);
     }
@@ -114,12 +113,6 @@ export default function AdminDashboard() {
         </Stack>
       </Stack>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
-          {error}
-        </Alert>
-      )}
-
       {questions.length === 0 ? (
         <Typography color="text.secondary">
           No questions yet. Add one or use Bulk Import!
@@ -155,24 +148,23 @@ export default function AdminDashboard() {
                   </TableCell>
 
                   {/* Show options with correct one highlighted */}
-                  <TableCell sx={{ maxWidth: 200 }}>
-                    {q.options.map((opt, idx) => (
-                      <Typography
-                        key={idx}
-                        variant="caption"
-                        display="block"
-                        sx={{
-                          fontWeight:
-                            idx === q.correctIndex ? "bold" : "normal",
-                          color:
-                            idx === q.correctIndex
-                              ? "success.main"
-                              : "text.secondary",
-                        }}
-                      >
-                        {String.fromCharCode(65 + idx)}. {opt}
-                      </Typography>
-                    ))}
+                  <TableCell sx={{ maxWidth: 220 }}>
+                    <Stack direction="column" spacing={0.25}>
+                      {q.options.map((opt, idx) => (
+                        <Typography
+                          key={idx}
+                          variant="caption"
+                          sx={{
+                            fontWeight: idx === q.correctIndex ? "bold" : "normal",
+                            color: idx === q.correctIndex ? "success.main" : "text.secondary",
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {String.fromCharCode(65 + idx)}. {opt}
+                        </Typography>
+                      ))}
+                    </Stack>
                   </TableCell>
 
                   <TableCell>

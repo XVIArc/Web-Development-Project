@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField, Button, Box, Typography, Alert, Grid,Paper } from "@mui/material";
-import { useState } from "react";
+import { TextField, Button, Box, Typography, Grid,Paper } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { useToast } from "../context/useToast";
 import { authApi } from "../api/auth";
 
 const schema = z
@@ -21,7 +21,7 @@ const schema = z
 export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const toast = useToast();
 
   const {
     register,
@@ -32,13 +32,12 @@ export default function Register() {
   });
 
   const onSubmit = async (data) => {
-    setError("");
     try {
       const result = await authApi.register(data);
       login(result.token, result.role);
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -69,12 +68,6 @@ return (
                 <Typography variant="h5" mb={3}>
                     Register
                 </Typography>
-
-                {error && (
-                    <Alert severity="error" sx={{ mb: 2, textAlign: "left" }}>
-                        {error}
-                    </Alert>
-                )}
 
                 <Box
                     component="form"

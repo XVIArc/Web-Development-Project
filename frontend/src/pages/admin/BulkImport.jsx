@@ -1,14 +1,8 @@
 import { useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { adminApi } from "../../api/admin";
+import { useToast } from "../../context/useToast";
 
 const PLACEHOLDER = JSON.stringify(
   [
@@ -30,42 +24,38 @@ const PLACEHOLDER = JSON.stringify(
 export default function BulkImport() {
   const navigate = useNavigate();
   const [raw, setRaw] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const toast = useToast();
 
   const handleImport = async () => {
-    setError("");
-    setSuccess("");
-
     // Client-side JSON parse before hitting the API
     let questions;
     try {
       questions = JSON.parse(raw);
     } catch {
-      setError("Invalid JSON — please fix the syntax and try again.");
+      toast.error("Invalid JSON — please fix the syntax and try again.");
       return;
     }
 
     if (!Array.isArray(questions)) {
-      setError("The JSON must be an array of question objects [ … ].");
+      toast.error("The JSON must be an array of question objects [ … ].");
       return;
     }
 
     if (questions.length === 0) {
-      setError("The array is empty — add at least one question.");
+      toast.error("The array is empty — add at least one question.");
       return;
     }
 
     setSubmitting(true);
     try {
       const imported = await adminApi.bulkImport({ questions });
-      setSuccess(
+      toast.success(
         `${imported.length} question${imported.length === 1 ? "" : "s"} imported successfully!`
       );
       setRaw("");
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }
@@ -86,17 +76,6 @@ export default function BulkImport() {
         &nbsp;&nbsp;• <strong>correctIndex</strong> — integer 0–3 pointing to
         the correct option
       </Typography>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess("")}>
-          {success}
-        </Alert>
-      )}
 
       <TextField
         label="JSON array"

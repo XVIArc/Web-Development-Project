@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { AuthProvider } from "./context/AuthProvider";
+import { ToastProvider } from "./context/ToastProvider";
 import { QuizProvider } from "./context/QuizProvider";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -32,6 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ToastProvider>
       <AuthProvider>
         <BrowserRouter>
           <Navbar mode={mode} toggleTheme={toggleTheme} />
@@ -59,6 +61,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

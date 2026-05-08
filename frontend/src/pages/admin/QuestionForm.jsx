@@ -1,25 +1,24 @@
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
-  FormControl,
-  FormControlLabel,
   FormHelperText,
-  FormLabel,
   Grid,
-  Radio,
-  RadioGroup,
+  IconButton,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { adminApi } from "../../api/admin";
+import { useToast } from "../../context/useToast";
 
 const schema = z.object({
   text: z.string().min(1, "Question text is required"),
@@ -27,8 +26,7 @@ const schema = z.object({
   option1: z.string().min(1, "Option B is required"),
   option2: z.string().min(1, "Option C is required"),
   option3: z.string().min(1, "Option D is required"),
-  // Radio group value comes in as a string; we coerce on submit
-  correctIndex: z.string().min(1, "Select the correct answer"),
+  correctIndex: z.string().min(1, "Mark the correct answer"),
 });
 
 function questionToFormValues(q) {
@@ -48,14 +46,15 @@ export default function QuestionForm() {
   const navigate = useNavigate();
   const { state: navState } = useLocation();
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(isEdit && !navState?.question);
+  const toast = useToast();
 
   const {
     register,
-    control,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
@@ -69,29 +68,28 @@ export default function QuestionForm() {
     },
   });
 
+  const correctIndex = watch("correctIndex");
+
   useEffect(() => {
     if (!isEdit) return;
 
-    // If navigation passed the question via router state, use it directly
     if (navState?.question) {
       reset(questionToFormValues(navState.question));
       return;
     }
 
-    // Otherwise fetch the full list and find it
     adminApi
       .getQuestions()
       .then((qs) => {
         const found = qs.find((q) => q._id === id);
         if (found) reset(questionToFormValues(found));
-        else setError("Question not found.");
+        else toast.error("Question not found.");
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
   }, [id, isEdit, navState, reset]);
 
   const onSubmit = async (data) => {
-    setError("");
     const payload = {
       text: data.text,
       options: [data.option0, data.option1, data.option2, data.option3],
@@ -105,7 +103,7 @@ export default function QuestionForm() {
       }
       navigate("/admin");
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -127,12 +125,6 @@ export default function QuestionForm() {
         {isEdit ? "Edit Question" : "New Question"}
       </Typography>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
-          {error}
-        </Alert>
-      )}
-
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2.5}>
           {/* Question text */}
@@ -146,52 +138,49 @@ export default function QuestionForm() {
             fullWidth
           />
 
-          {/* Four option fields */}
-          {["A", "B", "C", "D"].map((letter, i) => (
-            <TextField
-              key={i}
-              label={`Option ${letter}`}
-              {...register(`option${i}`)}
-              error={!!errors[`option${i}`]}
-              helperText={errors[`option${i}`]?.message}
-              fullWidth
-            />
-          ))}
+          {/* Option fields — checkmark button marks the correct answer */}
+          {["A", "B", "C", "D"].map((letter, i) => {
+            const isCorrect = correctIndex === String(i);
+            return (
+              <Stack key={i} direction="row" spacing={1} alignItems="flex-start">
+                <TextField
+                  label={`Option ${letter}`}
+                  {...register(`option${i}`)}
+                  error={!!errors[`option${i}`]}
+                  helperText={errors[`option${i}`]?.message}
+                  fullWidth
+                />
+                <Tooltip title={isCorrect ? "Correct answer" : "Mark as correct"}>
+                  <IconButton
+                    type="button"
+                    onClick={() => setValue("correctIndex", String(i), { shouldValidate: true })}
+                    color={isCorrect ? "success" : "default"}
+                    sx={{ mt: 1 }}
+                  >
+                    {isCorrect ? (
+                      <CheckCircleIcon />
+                    ) : (
+                      <RadioButtonUncheckedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            );
+          })}
 
-          {/* Correct answer radio group */}
-          <FormControl error={!!errors.correctIndex}>
-            <FormLabel>Correct Answer</FormLabel>
-            <Controller
-              name="correctIndex"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup {...field} row>
-                  {["A", "B", "C", "D"].map((letter, i) => (
-                    <FormControlLabel
-                      key={i}
-                      value={String(i)}
-                      control={<Radio />}
-                      label={`Option ${letter}`}
-                    />
-                  ))}
-                </RadioGroup>
-              )}
-            />
-            {errors.correctIndex && (
-              <FormHelperText>{errors.correctIndex.message}</FormHelperText>
-            )}
-          </FormControl>
+          {/* Validation message if no correct answer selected */}
+          {errors.correctIndex && (
+            <FormHelperText error sx={{ mt: -1.5 }}>
+              {errors.correctIndex.message}
+            </FormHelperText>
+          )}
 
           {/* Action buttons */}
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button variant="outlined" onClick={() => navigate("/admin")}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" variant="contained" disabled={isSubmitting}>
               {isEdit ? "Save Changes" : "Create Question"}
             </Button>
           </Stack>
