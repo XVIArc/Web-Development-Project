@@ -152,22 +152,27 @@ describe("GET /api/quiz/leaderboard", () => {
     expect(res.body.success).toBe(true);
   });
 
-  it("returns scores sorted highest first", async () => {
-    const { token: t1, userId: u1 } = await createUser("alice", "password123");
-    const { token: t2, userId: u2 } = await createUser("bob", "password123");
-    const questions = await createQuestions(6);
+  it("returns one entry per user with their best score, sorted highest first", async () => {
+    const { userId: u1 } = await createUser("alice", "password123");
+    const { userId: u2 } = await createUser("bob",   "password123");
 
-    const answers = questions.map((q) => ({ questionId: q._id, selectedIndex: 0 }));
-
+    // alice plays twice; only her best (4) should appear
     await Score.create({ userId: u1, username: "alice", score: 4, total: 6, answers: [] });
     await Score.create({ userId: u2, username: "bob",   score: 9, total: 6, answers: [] });
     await Score.create({ userId: u1, username: "alice", score: 2, total: 6, answers: [] });
 
     const res = await request(app).get("/api/quiz/leaderboard");
-    const scores = res.body.data.map((e) => e.score);
+    const data = res.body.data;
 
-    expect(scores[0]).toBeGreaterThanOrEqual(scores[1]);
-    expect(scores[1]).toBeGreaterThanOrEqual(scores[2]);
+    // each user appears exactly once
+    const usernames = data.map((e) => e.username);
+    expect(new Set(usernames).size).toBe(usernames.length);
+
+    // bob first with 9, alice second with best-of 4
+    expect(data[0].username).toBe("bob");
+    expect(data[0].score).toBe(9);
+    expect(data[1].username).toBe("alice");
+    expect(data[1].score).toBe(4);
   });
 });
 
