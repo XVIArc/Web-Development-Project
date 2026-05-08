@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-process.env.JWT_SECRET = "test-secret";
+process.env.NODE_ENV    = "test";
+process.env.JWT_SECRET  = "test-secret";
 process.env.JWT_EXPIRES_IN = "1h";
 
 const TEST_DB = "mongodb://localhost:27017/quizgame-test";

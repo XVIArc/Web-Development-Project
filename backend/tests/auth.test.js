@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
+const jwt = require("jsonwebtoken");
 
 describe("POST /api/auth/register", () => {
   it("registers a new user and returns a token", async () => {
@@ -88,5 +89,41 @@ describe("POST /api/auth/login", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
+  });
+
+  it("rejects empty string password", async () => {
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ username: "alice", password: "" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+});
+
+describe("Auth middleware", () => {
+  it("rejects a malformed token (not valid JWT)", async () => {
+    const res = await request(app)
+      .get("/api/quiz/questions")
+      .set("Authorization", "Bearer this.is.not.a.jwt");
+
+    expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
+  });
+
+  it("rejects a token signed with the wrong secret", async () => {
+    const fakeToken = jwt.sign({ id: "abc", username: "x", role: "player" }, "wrong-secret");
+
+    const res = await request(app)
+      .get("/api/quiz/questions")
+      .set("Authorization", `Bearer ${fakeToken}`);
+
+    expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
+  });
+
+  it("rejects a request with no Authorization header", async () => {
+    const res = await request(app).get("/api/quiz/questions");
+    expect(res.status).toBe(401);
   });
 });

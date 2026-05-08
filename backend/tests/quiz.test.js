@@ -35,6 +35,18 @@ describe("GET /api/quiz/questions", () => {
     expect(res.body.data.length).toBeLessThanOrEqual(10);
   });
 
+  it("caps at 10 questions even when the pool is larger", async () => {
+    const { token } = await createUser();
+    await createQuestions(15);
+
+    const res = await request(app)
+      .get("/api/quiz/questions")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBe(10);
+  });
+
   it("does not include correctIndex in the response", async () => {
     const { token } = await createUser();
     await createQuestions(6);
@@ -82,6 +94,29 @@ describe("POST /api/quiz/submit", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
+  });
+
+  it("rejects an empty answers array", async () => {
+    const { token } = await createUser();
+    const res = await request(app)
+      .post("/api/quiz/submit")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ answers: [] });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+
+  it("treats an unknown questionId as a wrong answer, does not crash", async () => {
+    const { token } = await createUser();
+    const res = await request(app)
+      .post("/api/quiz/submit")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ answers: [{ questionId: "000000000000000000000000", selectedIndex: 0 }] });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.score).toBe(0);
+    expect(res.body.data.total).toBe(1);
   });
 
   it("scores answers correctly and saves the attempt", async () => {
@@ -152,6 +187,17 @@ describe("GET /api/quiz/leaderboard", () => {
     expect(res.body.success).toBe(true);
   });
 
+  it("returns at most 10 entries even with a larger pool", async () => {
+    // create 12 distinct users each with one score
+    for (let i = 0; i < 12; i++) {
+      const { userId } = await createUser(`player${i}`, "password123");
+      await Score.create({ userId, username: `player${i}`, score: i, total: 10, answers: [] });
+    }
+
+    const res = await request(app).get("/api/quiz/leaderboard");
+    expect(res.body.data.length).toBeLessThanOrEqual(10);
+  });
+
   it("returns one entry per user with their best score, sorted highest first", async () => {
     const { userId: u1 } = await createUser("alice", "password123");
     const { userId: u2 } = await createUser("bob",   "password123");
@@ -195,5 +241,25 @@ describe("GET /api/quiz/attempts", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
+  });
+
+  it("returns multiple attempts for the same user, newest first", async () => {
+    const { token, userId } = await createUser("alice", "password123");
+
+    // Insert with explicit timestamps so ordering is deterministic
+    const older = new Date(Date.now() - 10000);
+    const newer = new Date();
+    await Score.create({ userId, username: "alice", score: 3, total: 6, answers: [], createdAt: older });
+    await Score.create({ userId, username: "alice", score: 6, total: 6, answers: [], createdAt: newer });
+
+    const res = await request(app)
+      .get("/api/quiz/attempts")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBe(2);
+    // newest (score 6) should come first
+    expect(new Date(res.body.data[0].createdAt).getTime())
+      .toBeGreaterThan(new Date(res.body.data[1].createdAt).getTime());
   });
 });

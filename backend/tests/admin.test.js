@@ -25,6 +25,25 @@ describe("Admin auth guards", () => {
       .set("Authorization", `Bearer ${playerToken}`);
     expect(res.status).toBe(403);
   });
+
+  it("blocks unauthenticated POST", async () => {
+    const res = await request(app).post("/api/admin/questions").send({});
+    expect(res.status).toBe(401);
+  });
+
+  it("blocks non-admin DELETE", async () => {
+    const res = await request(app)
+      .delete("/api/admin/questions/000000000000000000000000")
+      .set("Authorization", `Bearer ${playerToken}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("blocks non-admin PATCH toggle", async () => {
+    const res = await request(app)
+      .patch("/api/admin/questions/000000000000000000000000/toggle")
+      .set("Authorization", `Bearer ${playerToken}`);
+    expect(res.status).toBe(403);
+  });
 });
 
 describe("GET /api/admin/questions", () => {
@@ -43,6 +62,29 @@ describe("GET /api/admin/questions", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(4);
+  });
+
+  it("includes correctIndex in the response (not stripped like the quiz endpoint)", async () => {
+    await createQuestions(1);
+
+    const res = await request(app)
+      .get("/api/admin/questions")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.body.data[0].correctIndex).toBeDefined();
+  });
+
+  it("returns questions sorted newest first", async () => {
+    const q1 = await Question.create({ text: "First",  options: ["A","B","C","D"], correctIndex: 0 });
+    const q2 = await Question.create({ text: "Second", options: ["A","B","C","D"], correctIndex: 0 });
+
+    const res = await request(app)
+      .get("/api/admin/questions")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    // "Second" was created later so it should come first
+    expect(res.body.data[0].text).toBe("Second");
+    expect(res.body.data[1].text).toBe("First");
   });
 });
 
@@ -90,6 +132,15 @@ describe("POST /api/admin/questions", () => {
 
     expect(res.status).toBe(400);
   });
+
+  it("rejects more than 4 options", async () => {
+    const res = await request(app)
+      .post("/api/admin/questions")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ ...valid, options: ["A", "B", "C", "D", "E"] });
+
+    expect(res.status).toBe(400);
+  });
 });
 
 describe("PUT /api/admin/questions/:id", () => {
@@ -124,6 +175,19 @@ describe("PUT /api/admin/questions/:id", () => {
 
     expect(res.status).toBe(400);
   });
+
+  it("updates correctIndex and options together", async () => {
+    const [q] = await createQuestions(1);
+
+    const res = await request(app)
+      .put(`/api/admin/questions/${q._id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ options: ["W", "X", "Y", "Z"], correctIndex: 3 });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.options).toEqual(["W", "X", "Y", "Z"]);
+    expect(res.body.data.correctIndex).toBe(3);
+  });
 });
 
 describe("DELETE /api/admin/questions/:id", () => {
@@ -145,6 +209,17 @@ describe("DELETE /api/admin/questions/:id", () => {
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.status).toBe(404);
+  });
+
+  it("returns data: null on successful delete", async () => {
+    const [q] = await createQuestions(1);
+
+    const res = await request(app)
+      .delete(`/api/admin/questions/${q._id}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toBeNull();
   });
 });
 
@@ -210,6 +285,16 @@ describe("POST /api/admin/questions/bulk", () => {
       .send({ questions: [] });
 
     expect(res.status).toBe(400);
+  });
+
+  it("rejects a non-array questions value", async () => {
+    const res = await request(app)
+      .post("/api/admin/questions/bulk")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ questions: "not an array" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
   });
 
   it("rejects batch with invalid entries and returns bad indices", async () => {
