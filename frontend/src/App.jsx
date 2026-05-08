@@ -8,6 +8,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from './pages/Admin';
+import QuestionForm from './pages/admin/QuestionForm';
+import BulkImport from './pages/admin/BulkImport';
+import ProtectedRoute from './components/ProtectedRoute';
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import History from "./pages/History";
@@ -36,7 +39,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+            <Route path="/admin/questions/new" element={<ProtectedRoute adminOnly><QuestionForm /></ProtectedRoute>} />
+            <Route path="/admin/questions/:id" element={<ProtectedRoute adminOnly><QuestionForm /></ProtectedRoute>} />
+            <Route path="/admin/import" element={<ProtectedRoute adminOnly><BulkImport /></ProtectedRoute>} />
 
             <Route path="/history" element={<History />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
