@@ -54,7 +54,7 @@ export default function Result() {
             <Button variant="outlined" onClick={() => navigate("/leaderboard")}>
               Leaderboard
             </Button>
-            <Button variant="outlined" onClick={() => navigate("/attempts")}>
+            <Button variant="outlined" onClick={() => navigate("/history")}>
               My History
             </Button>
           </Box>
