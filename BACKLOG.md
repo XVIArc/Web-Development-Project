@@ -35,21 +35,21 @@
 - ✅ Past attempts page
 - ✅ Leaderboard page
 - ✅ Wire quiz pages to real API
-- 🔲 **[BUG]** Leaderboard returns top 3 attempts instead of top 3 unique users
-- 🔲 **[BUG]** "My History" button on Result page navigates to `/attempts` instead of `/history` <!-- AI --> — same user can appear multiple times <!-- AI -->
+- ✅ **[BUG FIXED]** Leaderboard now aggregates by userId (`$max` score), one entry per user
+- ✅ **[BUG FIXED]** "My History" button on Result page now navigates to `/history`
 
 ---
 
 ## 🛠️ Admin
 
-- 🔲 Admin dashboard (question list, active/inactive)
-- 🔲 Create question form (RHF + Zod)
-- 🔲 Edit question form (pre-filled)
-- 🔲 Delete question (with confirmation dialog)
-- 🔲 Toggle active/inactive
-- 🔲 Bulk import (JSON textarea)
-- 🔲 Register admin routes in App.jsx
-- 🔲 Admin-only route guard
+- ✅ Admin dashboard (question list, active/inactive) — `pages/admin/AdminDashboard.jsx`
+- ✅ Create question form (RHF + Zod) — `pages/admin/QuestionForm.jsx`
+- ✅ Edit question form (pre-filled) — `pages/admin/QuestionForm.jsx`
+- ✅ Delete question (with confirmation dialog)
+- ✅ Toggle active/inactive
+- ✅ Bulk import (JSON textarea) — `pages/admin/BulkImport.jsx`
+- ✅ Register admin routes in App.jsx
+- ✅ Admin-only route guard — `components/ProtectedRoute.jsx`
 
 ---
 
