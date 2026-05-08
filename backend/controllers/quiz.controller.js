@@ -79,12 +79,21 @@ const submitQuiz = async (req, res) => {
 };
 
 // GET /api/quiz/leaderboard  (public)
+// Aggregate so each user appears once with their personal best score.
 const getLeaderboard = async (req, res) => {
   try {
-    const entries = await Score.find()
-      .sort({ score: -1 })
-      .limit(10)
-      .select("username score total createdAt");
+    const entries = await Score.aggregate([
+      {
+        $group: {
+          _id: "$userId",
+          username: { $first: "$username" },
+          score: { $max: "$score" },
+        },
+      },
+      { $sort: { score: -1 } },
+      { $limit: 10 },
+      { $project: { _id: 0, username: 1, score: 1 } },
+    ]);
 
     res.json({ success: true, data: entries });
   } catch (err) {
