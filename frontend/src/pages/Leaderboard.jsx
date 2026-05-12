@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { quizApi } from "../api/quiz";
-
+import AnyCenteredPage from "../components/AnyCenteredPage";
 export default function Leaderboard() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,11 +34,12 @@ export default function Leaderboard() {
 
   const medals = ["🥇", "🥈", "🥉"];
 
-  return (
+    return (
+      <AnyCenteredPage maxWidth="sm">
     <Grid container justifyContent="center" sx={{ mt: 4 }}>
       <Grid item xs={12} sm={10} md={6}>
         <Box sx={{ px: 2 }}>
-          <Typography variant="h5" mb={3}>
+           <Typography variant="h3" mb={2}>
             Leaderboard
           </Typography>
 
@@ -65,6 +66,7 @@ export default function Leaderboard() {
           ))}
         </Box>
       </Grid>
-    </Grid>
+            </Grid>
+        </AnyCenteredPage>
   );
 }

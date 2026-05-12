@@ -6,14 +6,13 @@ import {
     Button,
     Box,
     Typography,
-    Alert,
     Grid,
     Paper,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { useToast } from "../context/useToast";
 import { authApi } from "../api/auth";
 
 const schema = z
@@ -31,7 +30,7 @@ export default function Register() {
     const theme = useTheme();
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [error, setError] = useState("");
+    const toast = useToast();
 
     const {
         register,
@@ -42,13 +41,12 @@ export default function Register() {
     });
 
     const onSubmit = async (data) => {
-        setError("");
         try {
             const result = await authApi.register(data);
             login(result.token, result.role);
             navigate("/");
         } catch (err) {
-            setError(err.message);
+            toast.error(err.message);
         }
     };
 
@@ -96,12 +94,6 @@ export default function Register() {
                     <Typography variant="h5" mb={3}>
                         Register
                     </Typography>
-
-                    {error && (
-                        <Alert severity="error" sx={{ mb: 2, textAlign: "left" }}>
-                            {error}
-                        </Alert>
-                    )}
 
                     <Box
                         component="form"

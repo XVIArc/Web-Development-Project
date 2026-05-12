@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { quizApi } from "../api/quiz";
-
+import AnyCenteredPage from "../components/AnyCenteredPage";
 export default function History() {
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,11 +32,12 @@ export default function History() {
       </Grid>
     );
 
-  return (
+    return (
+        <AnyCenteredPage maxWidth="sm">
     <Grid container justifyContent="center" sx={{ mt: 4 }}>
       <Grid item xs={12} sm={10} md={7}>
         <Box sx={{ px: 2 }}>
-          <Typography variant="h5" mb={3}>
+           <Typography variant="h3" mb={2}>
             History
           </Typography>
 
@@ -77,6 +78,7 @@ export default function History() {
           )}
         </Box>
       </Grid>
-    </Grid>
+            </Grid>
+        </AnyCenteredPage>
   );
 }

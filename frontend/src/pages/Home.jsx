@@ -2,6 +2,8 @@ import { Grid, Typography, Button,Paper,Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "@mui/material/styles";
+import { quizApi } from "../api/quiz"; 
+import HomeLeaderboard from "./HomesLeaderboard";
 
 export default function Home() {
   const theme = useTheme();
@@ -13,7 +15,7 @@ export default function Home() {
           container
           sx={{
               minHeight: "calc(100vh - 64px)",
-          }}
+          }} 
       >
           <Grid
               item
@@ -34,7 +36,7 @@ export default function Home() {
                   backdropFilter: "blur(12px)",
                   boxShadow:
                       theme.palette.mode === "dark"
-                          ? "12px 0 40px rgba(0, 0, 0, 0.35)"
+                          ? "12px 0 40px rgba(0, 0, 0, 0.44)"
                           : "12px 0 40px rgba(0, 0, 0, 0.12)",
               }}
           >
@@ -45,7 +47,8 @@ export default function Home() {
                 </Typography>
                 <Typography variant="body1" mb={4}>
                     {/*Test your knowledge. Climb the leaderboard.*/}
-                    Test your knowledge. Climb the leaderboard.
+                          Can you beat everyone on the Leaderboard?<br/>
+                          Take the quiz and find out!
                 </Typography>
                 {user ? (
                   <Button
@@ -67,7 +70,18 @@ export default function Home() {
             </Stack>
         </Paper>
           </Grid>
-          <Grid item xs={false} md={6} />
+          <Grid item
+              xs={12}
+              md={6}
+              sx={{
+                  minHeight: { xs: "auto", md: "calc(100vh - 64px)" },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  px: { xs: 3, md: 6 },
+                  py: 6,
+              }} />
+          {user && <HomeLeaderboard />}
     </Grid>
   );
 }

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../context/useQuiz";
-
+import AnyCenteredPage from "../components/AnyCenteredPage";
 export default function Result() {
   const { state, dispatch } = useQuiz();
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ export default function Result() {
     return null;
   }
 
-  return (
+    return (
+        <AnyCenteredPage maxWidth="sm">
     <Grid
       container
       justifyContent="center"
@@ -31,7 +32,7 @@ export default function Result() {
     >
       <Grid item xs={12} sm={8} md={5}>
         <Box sx={{ px: 2, textAlign: "center" }}>
-          <Typography variant="h4" mb={1}>
+          <Typography variant="h3" mb={2}>
             Quiz Complete!
           </Typography>
           <Typography variant="h2" color="primary" mb={3}>
@@ -54,12 +55,13 @@ export default function Result() {
             <Button variant="outlined" onClick={() => navigate("/leaderboard")}>
               Leaderboard
             </Button>
-            <Button variant="outlined" onClick={() => navigate("/attempts")}>
+            <Button variant="outlined" onClick={() => navigate("/history")}>
               My History
             </Button>
           </Box>
         </Box>
       </Grid>
-    </Grid>
+            </Grid>
+        </AnyCenteredPage>
   );
 }

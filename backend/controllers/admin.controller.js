@@ -14,7 +14,7 @@ const getQuestions = async (req, res) => {
 // POST /api/admin/questions
 const createQuestion = async (req, res) => {
   try {
-    const { text, options, correctIndex } = req.body;
+      const { text, imageUrl = "", options, correctIndex } = req.body;
 
     if (
       !text ||
@@ -28,7 +28,7 @@ const createQuestion = async (req, res) => {
       });
     }
 
-    const question = await Question.create({ text, options, correctIndex });
+    const question = await Question.create({ text, imageUrl, options, correctIndex });
     res.status(201).json({ success: true, data: question });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -38,7 +38,7 @@ const createQuestion = async (req, res) => {
 // PUT /api/admin/questions/:id
 const updateQuestion = async (req, res) => {
   try {
-    const { text, options, correctIndex } = req.body;
+    const { text,imageUrl = "", options, correctIndex } = req.body;
 
     if (options && options.length !== 4) {
       return res
@@ -48,8 +48,8 @@ const updateQuestion = async (req, res) => {
 
     // runValidators makes sure the model-level options check still fires
     const question = await Question.findByIdAndUpdate(
-      req.params.id,
-      { text, options, correctIndex },
+        req.params.id,
+        { text, imageUrl: imageUrl|| "", options, correctIndex },
       { returnDocument: "after", runValidators: true },
     );
 
@@ -134,9 +134,15 @@ const bulkImport = async (req, res) => {
       });
     }
 
-    const inserted = await Question.insertMany(
-      questions.map((q) => ({ ...q, active: true })),
-    );
+      const inserted = await Question.insertMany(
+          questions.map((q) => ({
+              text: q.text,
+              imageUrl: q.imageUrl || "",
+              options: q.options,
+              correctIndex: q.correctIndex,
+              active: true,
+          })),
+      );
 
     res.status(201).json({ success: true, data: inserted });
   } catch (err) {

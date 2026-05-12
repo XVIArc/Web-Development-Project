@@ -3,6 +3,12 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema(
   {
     text: { type: String, required: true },
+    imageUrl:
+    {
+        type: String,
+        trim: true,
+        default:"",
+        },
     options: {
       type: [String],
       validate: (v) => v.length === 4,

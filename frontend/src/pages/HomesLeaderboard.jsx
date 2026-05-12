@@ -1,0 +1,79 @@
+﻿import { useEffect, useState } from "react";
+import {
+    Box,
+    Card,
+    CardContent,
+    CircularProgress,
+    Grid,
+    Typography,
+} from "@mui/material";
+import { quizApi } from "../api/quiz";
+
+export default function HomeLeaderboard() {
+    const [entries, setEntries] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        quizApi
+            .getLeaderboard()
+            .then((data) => setEntries(data.slice(0, 5)))
+            .catch(() => setEntries([]))
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) {
+        return (
+            <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                sx={{ minHeight: 260 }}
+            >
+                <CircularProgress />
+            </Grid>
+        );
+    }
+
+    const medals = ["🥇", "🥈", "🥉"];
+
+    return (
+        <Box sx={{ width: "100%", maxWidth: 420, px: 2 }}>
+            <Typography variant="h3" mb={2} textAlign="center">
+                Leaderboard
+            </Typography>
+
+            {entries.length === 0 ? (
+                <Card>
+                    <CardContent>
+                        <Typography textAlign="center" color="text.secondary">
+                            No scores yet.
+                        </Typography>
+                    </CardContent>
+                </Card>
+            ) : (
+                entries.map((entry, i) => (
+                    <Card key={entry._id || i} sx={{ mb: 2 }}>
+                        <CardContent
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                                <Typography variant="h6">
+                                    {medals[i] ?? `#${i + 1}`}
+                                </Typography>
+                                <Typography variant="body1">{entry.username}</Typography>
+                            </Box>
+
+                            <Typography variant="h6" color="primary">
+                                {entry.score}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                ))
+            )}
+        </Box>
+    );
+}

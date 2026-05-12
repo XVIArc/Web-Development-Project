@@ -12,6 +12,7 @@ const rateLimit = require("express-rate-limit");
 const submitLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 min
   max: 5,
+  skip: () => process.env.NODE_ENV === "test",
   message: { success: false, error: "Too many submissions, slow down" },
 });
 

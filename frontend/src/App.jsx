@@ -2,13 +2,20 @@ import { useState, useMemo } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { AuthProvider } from "./context/AuthProvider";
+import { ToastProvider } from "./context/ToastProvider";
 import { QuizProvider } from "./context/QuizProvider";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from './pages/Admin';
+
 import AdminLogin from "./pages/AdminLogin";
+
+import QuestionForm from './pages/admin/QuestionForm';
+import BulkImport from './pages/admin/BulkImport';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import History from "./pages/History";
@@ -52,6 +59,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ToastProvider>
       <AuthProvider>
         <BrowserRouter>
             <Box
@@ -60,13 +68,13 @@ function App() {
                     backgroundImage:
                     mode === 'dark'
                         ? `linear-gradient(
-                            rgba(0, 0, 0, 0.62),
-                            rgba(0, 0, 0, 0.62)
+                            rgba(10, 25, 18, 0.78),
+                            rgba(10, 25, 18, 0.88)
                             ),
                         url(${bgImage})`
                         : `linear-gradient(
-                            rgba(255, 255, 255, 0.76),
-                            rgba(255, 255, 255, 0.76)
+                            rgba(238, 250, 241, 0.76),
+                            rgba(238, 250, 241, 0.76)
                             ),
                             url(${bgImage})`,
                     backgroundSize: 'cover',
@@ -80,8 +88,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/admin" element={<Admin />} />
+
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+            <Route path="/admin/questions/new" element={<ProtectedRoute adminOnly><QuestionForm /></ProtectedRoute>} />
+            <Route path="/admin/questions/:id" element={<ProtectedRoute adminOnly><QuestionForm /></ProtectedRoute>} />
+            <Route path="/admin/import" element={<ProtectedRoute adminOnly><BulkImport /></ProtectedRoute>} />
 
             <Route path="/history" element={<History />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
@@ -99,6 +111,7 @@ function App() {
           </Box>
         </BrowserRouter>
       </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
