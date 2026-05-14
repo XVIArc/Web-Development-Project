@@ -1,0 +1,316 @@
+{
+  "info": {
+    "name": "COMP4347 A2 — Quiz Game API",
+    "_postman_id": "comp4347-a2-quiz-game",
+    "description": "Full API reference for the MERN Stack Quiz Game.\nBase URL: http://localhost:5000\nAll responses: { success: boolean, data?: any, error?: string }",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "user_token",  "value": "" },
+    { "key": "admin_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player1\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Create a new player account. Returns a JWT token."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"token\": \"<jwt>\",\n    \"role\": \"user\"\n  }\n}"
+            },
+            {
+              "name": "409 Username Taken",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"success\": false,\n  \"error\": \"Username already taken\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player1\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Login and receive a JWT. Rate limited: 10 req / 15 min."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"token\": \"<jwt>\",\n    \"role\": \"user\"\n  }\n}"
+            },
+            {
+              "name": "401 Invalid Credentials",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"success\": false,\n  \"error\": \"Invalid credentials\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Quiz (User)",
+      "item": [
+        {
+          "name": "Get Questions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/quiz/questions",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" }
+            ],
+            "description": "Returns 6–10 shuffled active questions. correctIndex is never sent. Requires user JWT."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"664abc...\",\n      \"text\": \"What is 2 + 2?\",\n      \"options\": [\"3\", \"4\", \"5\", \"6\"],\n      \"imageUrl\": \"https://example.com/img.jpg\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "503 Not Enough Questions",
+              "status": "Service Unavailable",
+              "code": 503,
+              "body": "{\n  \"success\": false,\n  \"error\": \"Not enough active questions (minimum 6 required)\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Submit Quiz",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/quiz/submit",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    { \"questionId\": \"664abc...\", \"selectedIndex\": 1 },\n    { \"questionId\": \"664def...\", \"selectedIndex\": 3 }\n  ]\n}"
+            },
+            "description": "Submit answers for a completed quiz. Returns score. Rate limited: 5 req / 1 min."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"score\": 7,\n    \"total\": 10\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/quiz/leaderboard",
+            "description": "Top 10 players by personal best score. Public — no auth required."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    { \"username\": \"player1\", \"score\": 10 },\n    { \"username\": \"player2\", \"score\": 8 }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Attempts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/quiz/attempts",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" }
+            ],
+            "description": "All past attempts for the authenticated user, newest first."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    { \"score\": 7, \"total\": 10, \"createdAt\": \"2026-05-01T10:00:00Z\" }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List All Questions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/questions",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "description": "Returns all questions (active + inactive), newest first. Admin JWT required."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"664abc...\",\n      \"text\": \"What is 2 + 2?\",\n      \"options\": [\"3\", \"4\", \"5\", \"6\"],\n      \"correctIndex\": 1,\n      \"imageUrl\": \"\",\n      \"active\": true,\n      \"createdAt\": \"2026-05-01T10:00:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Question",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/admin/questions",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"What is the capital of France?\",\n  \"options\": [\"Berlin\", \"Madrid\", \"Paris\", \"Rome\"],\n  \"correctIndex\": 2,\n  \"imageUrl\": \"https://example.com/france.jpg\"\n}"
+            },
+            "description": "Create a single question. imageUrl is optional."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"success\": true,\n  \"data\": { \"_id\": \"664abc...\", \"text\": \"...\", \"active\": true }\n}"
+            },
+            {
+              "name": "400 Validation Error",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"success\": false,\n  \"error\": \"text, exactly 4 options, and correctIndex are required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Question",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/admin/questions/:id",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Updated question text\",\n  \"options\": [\"A\", \"B\", \"C\", \"D\"],\n  \"correctIndex\": 0,\n  \"imageUrl\": \"\"\n}"
+            },
+            "description": "Full replace of a question by ID."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": { \"_id\": \"664abc...\", \"text\": \"Updated question text\" }\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"success\": false,\n  \"error\": \"Question not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Question",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/admin/questions/:id",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "description": "Permanently delete a question by ID."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Toggle Active/Inactive",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/admin/questions/:id/toggle",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "description": "Flip the active flag on a question. Returns the updated document."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"data\": { \"_id\": \"664abc...\", \"active\": false }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Bulk Import Questions",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/admin/questions/bulk",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questions\": [\n    {\n      \"text\": \"Which planet is red?\",\n      \"options\": [\"Venus\", \"Mars\", \"Jupiter\", \"Saturn\"],\n      \"correctIndex\": 1,\n      \"imageUrl\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/320px-OSIRIS_Mars_true_color.jpg\"\n    },\n    {\n      \"text\": \"What is 2 + 2?\",\n      \"options\": [\"3\", \"4\", \"5\", \"6\"],\n      \"correctIndex\": 1\n    }\n  ]\n}"
+            },
+            "description": "Import multiple questions at once. All are validated before any are inserted. imageUrl is optional per question."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"success\": true,\n  \"data\": [ { \"_id\": \"...\", \"text\": \"...\" } ]\n}"
+            },
+            {
+              "name": "400 Validation Failure",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"success\": false,\n  \"error\": \"2 question(s) failed validation\",\n  \"data\": [0, 3]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
