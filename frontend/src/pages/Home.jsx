@@ -18,9 +18,7 @@ export default function Home() {
           }} 
       >
           <Grid
-              item
-              xs={12}
-              md={6}
+              size={{ xs: 12, md: 6 }}
               sx={{
                   width: '50%',
                   minHeight: "calc(100vh - 64px)",
@@ -70,9 +68,8 @@ export default function Home() {
             </Stack>
         </Paper>
           </Grid>
-          <Grid item
-              xs={12}
-              md={6}
+          <Grid
+              size={{ xs: 12, md: 6 }}
               sx={{
                   minHeight: { xs: "auto", md: "calc(100vh - 64px)" },
                   display: "flex",

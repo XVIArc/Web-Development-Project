@@ -39,9 +39,11 @@ export default function Quiz() {
     return (
       <Grid
         container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "80vh" }}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+        }}
       >
         <CircularProgress />
       </Grid>
@@ -64,11 +66,13 @@ export default function Quiz() {
         <AnyCenteredPage maxWidth='sm'> 
     <Grid
       container
-      justifyContent="center"
-      alignItems="center"
-      sx={{ minHeight: "80vh" }}
+      sx={{
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+      }}
     >
-      <Grid item xs={12} sm={8} md={6}>
+      <Grid size={{ xs: 12, sm: 8, md: 6 }}>
         <Box sx={{ px: 2 }}>
           <Typography variant="body2" mb={1}>
             Question {state.currentIndex + 1} of {state.questions.length}
@@ -117,7 +121,7 @@ export default function Quiz() {
 
           <Grid container spacing={2}>
             {question.options.map((opt, i) => (
-              <Grid item xs={12} sm={6} key={i}>
+              <Grid size={{ xs: 12, sm: 6 }} key={i}>
                     <Button
                         fullWidth
                         variant={selected === i ? "contained" : "outlined"}

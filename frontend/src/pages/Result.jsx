@@ -26,11 +26,13 @@ export default function Result() {
         <AnyCenteredPage maxWidth="sm">
     <Grid
       container
-      justifyContent="center"
-      alignItems="center"
-      sx={{ minHeight: "80vh" }}
+      sx={{
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+      }}
     >
-      <Grid item xs={12} sm={8} md={5}>
+      <Grid size={{ xs: 12, sm: 8, md: 5 }}>
         <Box sx={{ px: 2, textAlign: "center" }}>
           <Typography variant="h3" mb={2}>
             Quiz Complete!

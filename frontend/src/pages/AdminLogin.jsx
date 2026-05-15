@@ -85,14 +85,13 @@ export default function AdminLogin() {
             >
                 <Stack spacing={2}>
                     <Box>
-                        <Typography variant="h5" fontWeight={700} textAlign="center">
+                        <Typography variant="h5" fontWeight={700} sx={{ textAlign: "center" }}>
                             Admin Login
                         </Typography>
                         <Typography
                             variant="body2"
                             color="text.secondary"
-                            textAlign="center"
-                            sx={{ mt: 1 }}
+                            sx={{ mt: 1, textAlign: "center" }}
                         >
                             Sign in with an administrator account.
                         </Typography>

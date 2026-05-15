@@ -75,9 +75,11 @@ export default function AdminDashboard() {
     return (
       <Grid
         container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "80vh" }}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+        }}
       >
         <CircularProgress />
       </Grid>

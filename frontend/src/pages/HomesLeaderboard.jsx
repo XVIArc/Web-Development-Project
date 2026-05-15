@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Card,
@@ -25,9 +25,11 @@ export default function HomeLeaderboard() {
         return (
             <Grid
                 container
-                justifyContent="center"
-                alignItems="center"
-                sx={{ minHeight: 260 }}
+                sx={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: 260,
+                }}
             >
                 <CircularProgress />
             </Grid>
@@ -38,14 +40,14 @@ export default function HomeLeaderboard() {
 
     return (
         <Box sx={{ width: "100%", maxWidth: 420, px: 2 }}>
-            <Typography variant="h3" mb={2} textAlign="center">
+            <Typography variant="h3" mb={2} sx={{ textAlign: "center" }}>
                 Leaderboard
             </Typography>
 
             {entries.length === 0 ? (
                 <Card>
                     <CardContent>
-                        <Typography textAlign="center" color="text.secondary">
+                        <Typography sx={{ textAlign: "center" }} color="text.secondary">
                             No scores yet.
                         </Typography>
                     </CardContent>

@@ -24,9 +24,11 @@ export default function Leaderboard() {
     return (
       <Grid
         container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "80vh" }}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+        }}
       >
         <CircularProgress />
       </Grid>
@@ -36,8 +38,8 @@ export default function Leaderboard() {
 
     return (
       <AnyCenteredPage maxWidth="sm">
-    <Grid container justifyContent="center" sx={{ mt: 4 }}>
-      <Grid item xs={12} sm={10} md={6}>
+    <Grid container sx={{ justifyContent: "center", mt: 4 }}>
+      <Grid size={{ xs: 12, sm: 10, md: 6 }}>
         <Box sx={{ px: 2 }}>
            <Typography variant="h3" mb={2}>
             Leaderboard

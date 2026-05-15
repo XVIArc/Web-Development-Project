@@ -58,9 +58,7 @@ export default function Register() {
             }}
         >
             <Grid
-                item
-                xs={12}
-                md={6}
+                size={{ xs: 12, md: 6 }}
                 sx={{
                     width: "50%",
                     minHeight: "calc(100vh - 64px)",
@@ -151,7 +149,7 @@ export default function Register() {
                 </Paper>
             </Grid>
 
-            <Grid item xs={false} md={6} />
+            <Grid size={{ xs: false, md: 6 }} />
         </Grid>
     );
 }
