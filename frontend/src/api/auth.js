@@ -1,10 +1,6 @@
-const BASE = import.meta.env.VITE_API_URL || "/api";
+import { handleApiResponse } from "./handleResponse";
 
-const handle = async (res) => {
-  const data = await res.json();
-  if (!data.success) throw new Error(data.error || "Something went wrong");
-  return data.data;
-};
+const BASE = import.meta.env.VITE_API_URL || "/api";
 
 export const authApi = {
   login: ({ username, password }) =>
@@ -12,12 +8,12 @@ export const authApi = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
-    }).then(handle),
+    }).then(handleApiResponse),
 
   register: ({ username, password }) =>
     fetch(`${BASE}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
-    }).then(handle),
+    }).then(handleApiResponse),
 };
