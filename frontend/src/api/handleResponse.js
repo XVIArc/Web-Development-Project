@@ -1,3 +1,4 @@
+export async function handleApiResponse(res) {
     const text = await res.text();
     if (!text.trim()) {
         throw new Error(
