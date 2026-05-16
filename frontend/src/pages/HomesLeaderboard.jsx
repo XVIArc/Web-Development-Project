@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-    Box,
-    Card,
-    CardContent,
-    CircularProgress,
-    Grid,
-    Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { quizApi } from "../api/quiz";
+import PageLoader from "../components/PageLoader";
 
 export default function HomeLeaderboard() {
     const [entries, setEntries] = useState([]);
@@ -21,20 +15,7 @@ export default function HomeLeaderboard() {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) {
-        return (
-            <Grid
-                container
-                sx={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: 260,
-                }}
-            >
-                <CircularProgress />
-            </Grid>
-        );
-    }
+    if (loading) return <PageLoader minHeight={260} />;
 
     const medals = ["🥇", "🥈", "🥉"];
 

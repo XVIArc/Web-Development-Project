@@ -5,9 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
-  CircularProgress,
   FormHelperText,
-  Grid,
   IconButton,
   Stack,
   TextField,
@@ -19,6 +17,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { adminApi } from "../../api/admin";
 import { useToast } from "../../context/useToast";
+import PageLoader from "../../components/PageLoader";
 
 const schema = z.object({
 text: z.string().min(1, "Question text is required"),
@@ -116,19 +115,7 @@ export default function QuestionForm() {
     }
   };
 
-  if (loading)
-    return (
-      <Grid
-        container
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-        }}
-      >
-        <CircularProgress />
-      </Grid>
-    );
+  if (loading) return <PageLoader />;
 
   return (
     <Box sx={{ px: 3, py: 4, maxWidth: 620, mx: "auto" }}>

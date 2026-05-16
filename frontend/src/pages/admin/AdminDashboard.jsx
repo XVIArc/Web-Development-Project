@@ -3,13 +3,11 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Grid,
   IconButton,
   Paper,
   Stack,
@@ -31,6 +29,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
 import { adminApi } from "../../api/admin";
 import { useToast } from "../../context/useToast";
+import PageLoader from "../../components/PageLoader";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -71,19 +70,7 @@ export default function AdminDashboard() {
     }
   };
 
-  if (loading)
-    return (
-      <Grid
-        container
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-        }}
-      >
-        <CircularProgress />
-      </Grid>
-    );
+  if (loading) return <PageLoader />;
 
   return (
     <Box sx={{ px: 3, py: 4, maxWidth: 1000, mx: "auto" }}>

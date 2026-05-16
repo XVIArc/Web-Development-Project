@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { quizApi } from "../api/quiz";
 import AnyCenteredPage from "../components/AnyCenteredPage";
+import PageLoader from "../components/PageLoader";
 export default function History() {
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,19 +14,7 @@ export default function History() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading)
-    return (
-      <Grid
-        container
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-        }}
-      >
-        <CircularProgress />
-      </Grid>
-    );
+  if (loading) return <PageLoader />;
 
     return (
         <AnyCenteredPage maxWidth="sm">

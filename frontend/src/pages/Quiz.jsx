@@ -6,13 +6,13 @@ import {
   Card,
   CardContent,
   Grid,
-    Typography,
+  Typography,
   Paper,
-  CircularProgress,
 } from "@mui/material";
 import { useQuiz } from "../context/useQuiz";
 import { quizApi } from "../api/quiz";
 import AnyCenteredPage from "../components/AnyCenteredPage";
+import PageLoader from "../components/PageLoader";
 export default function Quiz() {
   const { state, dispatch } = useQuiz();
   const navigate = useNavigate();
@@ -35,19 +35,7 @@ export default function Quiz() {
     }
   }, [state.status]);
 
-  if (loading)
-    return (
-      <Grid
-        container
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-        }}
-      >
-        <CircularProgress />
-      </Grid>
-    );
+  if (loading) return <PageLoader />;
 
   if (state.status !== "active") return null;
 
