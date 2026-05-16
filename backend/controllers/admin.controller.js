@@ -134,15 +134,16 @@ const bulkImport = async (req, res) => {
       });
     }
 
-      const inserted = await Question.insertMany(
-          questions.map((q) => ({
-              text: q.text,
-              imageUrl: q.imageUrl || "",
-              options: q.options,
-              correctIndex: q.correctIndex,
-              active: true,
-          })),
-      );
+    const inserted = await Question.insertMany(
+      questions.map((q) => ({
+        text: q.text,
+        imageUrl:
+          typeof q.imageUrl === "string" ? q.imageUrl.trim() : "",
+        options: q.options,
+        correctIndex: q.correctIndex,
+        active: true,
+      })),
+    );
 
     res.status(201).json({ success: true, data: inserted });
   } catch (err) {

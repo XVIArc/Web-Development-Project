@@ -278,6 +278,31 @@ describe("POST /api/admin/questions/bulk", () => {
     expect(count).toBe(2);
   });
 
+  it("imports imageUrl on bulk questions when provided", async () => {
+    const res = await request(app)
+      .post("/api/admin/questions/bulk")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        questions: [
+          {
+            text: "Planet with image",
+            options: ["A", "B", "C", "D"],
+            correctIndex: 2,
+            imageUrl: "https://example.com/planet.jpg",
+          },
+          {
+            text: "No image question",
+            options: ["W", "X", "Y", "Z"],
+            correctIndex: 0,
+          },
+        ],
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data[0].imageUrl).toBe("https://example.com/planet.jpg");
+    expect(res.body.data[1].imageUrl).toBe("");
+  });
+
   it("rejects empty array", async () => {
     const res = await request(app)
       .post("/api/admin/questions/bulk")
