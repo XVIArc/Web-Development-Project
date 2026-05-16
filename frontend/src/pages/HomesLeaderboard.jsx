@@ -39,7 +39,7 @@ export default function HomeLeaderboard() {
     const medals = ["🥇", "🥈", "🥉"];
 
     return (
-        <Box sx={{ width: "100%", maxWidth: 420, px: 2 }}>
+        <Box sx={{ width: "100%", maxWidth: 420, mx: "auto", px: 2 }}>
             <Typography variant="h3" mb={2} sx={{ textAlign: "center" }}>
                 Leaderboard
             </Typography>
