@@ -1,4 +1,5 @@
 import {
+  Box,
   Chip,
   IconButton,
   Paper,
@@ -29,6 +30,7 @@ export default function AdminQuestionsTable({
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
+            <TableCell>Image</TableCell>
             <TableCell>Question</TableCell>
             <TableCell>Options</TableCell>
             <TableCell>Status</TableCell>
@@ -39,6 +41,31 @@ export default function AdminQuestionsTable({
           {questions.map((q, i) => (
             <TableRow key={q._id} hover>
               <TableCell>{i + 1}</TableCell>
+
+              <TableCell sx={{ width: 72 }}>
+                {q.imageUrl ? (
+                  <Box
+                    component="img"
+                    src={q.imageUrl}
+                    alt=""
+                    sx={{
+                      width: 56,
+                      height: 40,
+                      objectFit: "cover",
+                      borderRadius: 1,
+                      display: "block",
+                      bgcolor: "action.hover",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <Typography variant="caption" color="text.secondary">
+                    —
+                  </Typography>
+                )}
+              </TableCell>
 
               <TableCell sx={{ maxWidth: 320 }}>
                 <Tooltip title={q.text} placement="top-start">

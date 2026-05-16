@@ -7,18 +7,25 @@ import { useToast } from "../../context/useToast";
 const PLACEHOLDER = JSON.stringify(
   [
     {
+      text: "Which planet is red?",
+      options: ["Venus", "Mars", "Jupiter", "Saturn"],
+      correctIndex: 1,
+      imageUrl: "https://picsum.photos/seed/red-planet-mars/800/400",
+    },
+    {
+      text: "What planet is this?",
+      options: ["Mercury", "Venus", "Earth", "Mars"],
+      correctIndex: 2,
+      imageUrl: "/images/Earth.jpg",
+    },
+    {
       text: "What is 2 + 2?",
       options: ["3", "4", "5", "6"],
       correctIndex: 1,
     },
-    {
-      text: "Which planet is closest to the Sun?",
-      options: ["Venus", "Earth", "Mercury", "Mars"],
-      correctIndex: 2,
-    },
   ],
   null,
-  2
+  2,
 );
 
 export default function BulkImport() {
@@ -28,7 +35,6 @@ export default function BulkImport() {
   const toast = useToast();
 
   const handleImport = async () => {
-    // Client-side JSON parse before hitting the API
     let questions;
     try {
       questions = JSON.parse(raw);
@@ -51,7 +57,7 @@ export default function BulkImport() {
     try {
       const imported = await adminApi.bulkImport({ questions });
       toast.success(
-        `${imported.length} question${imported.length === 1 ? "" : "s"} imported successfully!`
+        `${imported.length} question${imported.length === 1 ? "" : "s"} imported successfully!`,
       );
       setRaw("");
     } catch (err) {
@@ -63,7 +69,7 @@ export default function BulkImport() {
 
   return (
     <Box sx={{ px: 3, py: 4, maxWidth: 720, mx: "auto" }}>
-      <Typography variant="h5" mb={1}>
+      <Typography variant="h5" component="h1" mb={1}>
         Bulk Import Questions
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3}>
@@ -75,6 +81,10 @@ export default function BulkImport() {
         <br />
         &nbsp;&nbsp;• <strong>correctIndex</strong> — integer 0–3 pointing to
         the correct option
+        <br />
+        &nbsp;&nbsp;• <strong>imageUrl</strong> — optional; full URL (
+        <code>https://…</code>) or app path (e.g.{" "}
+        <code>/images/Earth.jpg</code> in <code>frontend/public/images/</code>)
       </Typography>
 
       <TextField
