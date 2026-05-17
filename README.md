@@ -10,7 +10,7 @@
 |------|--------|------|-------------|
 | Aki Sato | csat9038 | Backend architecture, DB models, middleware, test suite, quiz/leaderboard/history pages, project scaffold | [models](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/6812122) · [controllers](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/507f146) · [middleware](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/a851193) · [tests](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/67ad7b1) · [admin dashboard UI](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/6151870) |
 | Tenko XVI | Arc5689 | Admin routes, admin login flow, UI polish, image URL variation | [admin route + UI](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/9f8d432) · [admin login fix](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/9ee0937) · [image variation](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/4c9a491) |
-| Brian Harrison | bhar5201 | Frontend styling, login page, dark mode | [login page](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/2292aee) · [dark mode](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/58d2650) |
+| Brian Harrison | bhar5201 | Frontend integration (`handleApiResponse`, port 5001), shared components (`PageLoader`, `QuizQuestion`, `AdminQuestionsTable`), image variation completion (bulk import, seed, admin thumbnails), login UX | [API client](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/d25f747) · [port 5001](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/be30cc6) · [components](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/978b8f6) · [image bulk/seed](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/1d62784) · [login UX](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/2292aee) |
 
 ---
 
@@ -43,14 +43,14 @@ cd COMP4347_A2
 cd backend
 cp .env.example .env   # edit the values below
 npm install
-npm run dev            # starts on http://localhost:5000
+npm run dev            # starts on http://localhost:5001 (default; see PORT below)
 ```
 
 **Environment variables** (`backend/.env`):
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `5000` | Port the Express server listens on |
+| `PORT` | `5001` | Port the Express server listens on (5001 avoids macOS AirPlay on 5000) |
 | `MONGO_URI` | `mongodb://localhost:27017/quizgame` | MongoDB connection string (local or Atlas) |
 | `JWT_SECRET` | *(required)* | Secret used to sign JWTs — use a long random string in production |
 | `JWT_EXPIRES_IN` | `7d` | JWT expiry duration (e.g. `1d`, `7d`, `24h`) |
@@ -68,7 +68,7 @@ npm run dev            # starts on http://localhost:5173
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VITE_API_URL` | *(empty — uses Vite proxy)* | Set to full backend URL only when deploying without the dev proxy (e.g. `http://localhost:5000`) |
+| `VITE_API_URL` | *(empty — uses Vite proxy)* | Set to full backend URL only when deploying without the dev proxy (e.g. `http://localhost:5001`) |
 
 ### 4 — Seed the database
 
@@ -83,7 +83,7 @@ The seed script does **not** create an admin user. Do it once via the API:
 
 ```bash
 # 1. Register a normal account
-curl -X POST http://localhost:5000/api/auth/register \
+curl -X POST http://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"yourpassword"}'
 
@@ -155,7 +155,7 @@ Full implementation guide: [`docs/IMAGE-VARIATION.md`](docs/IMAGE-VARIATION.md)
 
 Import [`docs/api.postman_collection.json`](docs/api.postman_collection.json) into Postman for an interactive collection with example requests and responses.
 
-**Base URL:** `http://localhost:5000`  
+**Base URL:** `http://localhost:5001`  
 **Response envelope:** all endpoints return `{ success: boolean, data?: any, error?: string }`
 
 ### Auth — `/api/auth`
