@@ -1,15 +1,13 @@
+# Web Development Project
 
----
+A collaborative web development project completed as part of my university coursework. The project focuses on building a functional web interface with structured page layouts, user interaction, and backend/data integration features.
 
-## Team
+## My Contributions
 
-| Name | Role | Key Commits |
-|------|--------|------|-------------|
-| Aki Sato |Backend architecture, DB models, middleware, test suite, quiz/leaderboard/history pages, project scaffold | [models](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/6812122) · [controllers](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/507f146) · [middleware](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/a851193) · [tests](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/67ad7b1) · [admin dashboard UI](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/6151870) |
-| Chong An |  Admin routes, admin login flow, UI polish, image URL variation | [admin route + UI](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/9f8d432) · [admin login fix](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/9ee0937) · [image variation](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/4c9a491) |
-| Brian Harrison | Frontend integration (`handleApiResponse`, port 5001), shared components (`PageLoader`, `QuizQuestion`, `AdminQuestionsTable`), image variation completion (bulk import, seed, admin thumbnails), login UX | [API client](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/d25f747) · [port 5001](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/be30cc6) · [components](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/978b8f6) · [image bulk/seed](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/1d62784) · [login UX](https://github.sydney.edu.au/COMP4347-2026-S1-TUT02-G8/COMP4347_A2/commit/2292aee) |
-
----
+- Contributed to frontend page implementation
+- Worked on layout and styling improvements
+- Assisted with feature integration and debugging
+- Participated in team discussions and project refinement
 
 ## Tech Stack
 
@@ -27,10 +25,24 @@
 - Node.js 18+
 - MongoDB running locally **or** a MongoDB Atlas URI
 
+### Quick setup (one command)
+
+After cloning, run the setup script from the project root:
+
+```bash
+bash setup.sh
+```
+
+This will: check prerequisites, copy `.env` files, install all dependencies, and seed the database. Then start the servers manually as shown at the end of the script output.
+
+---
+
+### Manual setup
+
 ### 1 — Clone
 
 ```bash
-git clone git@github.sydney.edu.au:COMP4347-2026-S1-TUT02-G8/COMP4347_A2.git
+git clone https://github.com/XVIArc/Web-Development-Project.git
 cd COMP4347_A2
 ```
 
@@ -56,7 +68,7 @@ npm run dev            # starts on http://localhost:5001 (default; see PORT belo
 
 ```bash
 cd frontend
-cp .env.example .env   # only needed if backend is not on port 5000
+cp .env.example .env   # only needed if backend is not on port 5001
 npm install
 npm run dev            # starts on http://localhost:5173
 ```
@@ -71,22 +83,17 @@ npm run dev            # starts on http://localhost:5173
 
 ```bash
 cd backend
-npm run seed           # clears existing questions and inserts sample data
+npm run seed
 ```
 
-### 5 — Create an admin account
+The seed script creates two default accounts and inserts sample questions (≥ 50% with images):
 
-The seed script does **not** create an admin user. Do it once via the API:
+| Username | Password | Role |
+|----------|----------|------|
+| `user` | `user` | Player |
+| `admin` | `admin` | Admin |
 
-```bash
-# 1. Register a normal account
-curl -X POST http://localhost:5001/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"yourpassword"}'
-
-# 2. Promote it to admin directly in MongoDB
-mongosh quizgame --eval 'db.users.updateOne({username:"admin"},{$set:{role:"admin"}})'
-```
+Safe to run multiple times — existing users and questions are skipped, not duplicated.
 
 ---
 
