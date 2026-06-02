@@ -42,7 +42,7 @@ This will: check prerequisites, copy `.env` files, install all dependencies, and
 ### 1 — Clone
 
 ```bash
-git clone git@github.sydney.edu.au:COMP4347-2026-S1-TUT02-G8/COMP4347_A2.git
+git clone https://github.com/XVIArc/Web-Development-Project.git
 cd COMP4347_A2
 ```
 
